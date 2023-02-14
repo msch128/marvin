@@ -49,7 +49,7 @@ if(!empty($_REQUEST['hash']))
 		}
 	}
 
-	$saveFile = file_put_contents(__DIR__.'/test.json', json_encode($content, JSON_PRETTY_PRINT));
+	$saveFile = file_put_contents(__DIR__.'/rteu.json', json_encode($content, JSON_PRETTY_PRINT));
 
 	if($saveFile)
 	{

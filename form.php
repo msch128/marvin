@@ -24,7 +24,7 @@
 	<form id="rteu-form">
 		<?php
 
-		$json = file_get_contents(__DIR__.'/test.json');
+		$json = file_get_contents(__DIR__.'/rteu.json');
 
 		try
 		{
@@ -120,7 +120,7 @@
 		});
 
 		// Set up our request
-		XHR.open('POST', "http://localhost/marvin/handler.php");
+		XHR.open('POST', "http://localhost/handler.php");
 
 		// Add the required HTTP header for form data POST requests
 		XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');

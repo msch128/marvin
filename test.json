@@ -1,0 +1,51 @@
+{
+    "sdr": {
+        "frequency": "150130000",
+        "samplerate": "250000",
+        "max_signal_mode": "1"
+    },
+    "RX1": {
+        "orientation": "0",
+        "gain": "40",
+        "loglevel": "25",
+        "fftbins": "400",
+        "fftsamples": "50",
+        "siglenmin": "0.01",
+        "siglenmax": "0.04"
+    },
+    "RX2": {
+        "orientation": "90",
+        "gain": "40",
+        "loglevel": "25",
+        "fftbins": "400",
+        "fftsamples": "50",
+        "siglenmin": "0.01",
+        "siglenmax": "0.04"
+    },
+    "RX3": {
+        "orientation": "180",
+        "gain": "40",
+        "loglevel": "25",
+        "fftbins": "400",
+        "fftsamples": "50",
+        "siglenmin": "0.01",
+        "siglenmax": "0.04"
+    },
+    "RX4": {
+        "orientation": "270",
+        "gain": "40",
+        "loglevel": "25",
+        "fftbins": "400",
+        "fftsamples": "50",
+        "siglenmin": "0.01",
+        "siglenmax": "0.04"
+    },
+    "Project": {
+        "id": "1",
+        "name": "Steinkauz",
+        "station_id": "1",
+        "set_id": "0",
+        "longitude": "8.286963",
+        "latitude": "52.068876"
+    }
+}

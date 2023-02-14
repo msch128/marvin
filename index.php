@@ -13,11 +13,14 @@
  * or publicly readable on your website
  */
 
+/**
+ * @return string
+ */
 function getMyUrl()
 {
 	$protocol = (!empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1')) ? 'https://' : 'http://';
 	$server   = $_SERVER['SERVER_NAME'];
-	$request = $_SERVER['REQUEST_URI'] ?? '';
+	$request  = $_SERVER['REQUEST_URI'] ?? '';
 	$port     = $_SERVER['SERVER_PORT'] ? ':'.$_SERVER['SERVER_PORT'] : '';
 
 	return $protocol.$server.$port.$request;

@@ -13,64 +13,131 @@
  * or publicly readable on your website
  */
 
-if(!empty($_REQUEST['hash']))
-{
-	header('Content-Type: application/json; charset=utf-8');
-	try
-	{
-		$data = json_decode($_REQUEST['formdata'], true, 512, JSON_THROW_ON_ERROR);
-	}
-	catch(JsonException $e)
-	{
-		$notice = [
-			'error_message' => $e->getMessage(),
-			'error_file'    => $e->getFile(),
-			'line'          => $e->getLine(),
-			'trace'         => $e->getTrace(),
-		];
+?>
 
-		echo json_encode($notice, JSON_PRETTY_PRINT);
-		exit;
-	}
+<head>
+	<title>Bumms</title>
+</head>
+<div class="col-sm-6 col-sm-offset-3">
+	<h1>Titel</h1>
 
-	$content = [];
-	foreach($data as $key => $value)
-	{
-		preg_match_all('/(.*?)-(.*?)$/m', $key, $matches, PREG_SET_ORDER, 0);
+	<form id="rteu-form">
+		<?php
 
-		$matches = $matches[0];
-		/* FYI
-		$parent = $matches[1];
-		$child  = $matches[2];  */
+		$json = file_get_contents(__DIR__.'/rteu.json');
 
-		if(!empty($matches[1]))
+		try
 		{
-			$content[$matches[1]][$matches[2]] = $value;
+			$content = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		}
+		catch(JsonException $e)
+		{
+			echo $e->getMessage();
+			exit;
+		}
+
+		foreach($content as $key => $value)
+		{
+			?>
+			<p><strong><?php echo strtoupper($key) ?></strong></p>
+			<table>
+				<tr>
+					<td width="50%"></td>
+					<td width="50%"></td>
+				</tr>
+				<?php
+				foreach($value as $k => $v)
+				{
+					?>
+					<tr>
+						<td>
+							<label for="<?php echo $key.'-'.$k; ?>"><?php echo $k; ?></label>
+						</td>
+						<td>
+							<input type="text" class="form-control" id="sdr-frequency-input"
+								   name="<?php echo $key.'-'.$k; ?>"
+								   value="<?php echo $v; ?>">
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+		<?php } ?>
+		<button type="submit" class="btn btn-success">Absenden</button>
+	</form>
+</div>
+<script>
+	window.addEventListener("load", function()
+	{
+		const form = document.getElementById("rteu-form");
+
+		form.addEventListener("submit", function(event)
+		{
+			event.preventDefault();
+
+			const FD = new FormData(event.target);
+
+			let Formobject = {};
+			FD.forEach(function(value, key)
+			{
+				Formobject[key] = value;
+			});
+			let json = JSON.stringify(Formobject);
+
+			sendData(json);
+		});
+	});
+
+	function sendData(data)
+	{
+		let postData = {
+			hash: 'sicherheitgehtvor!',
+			formdata: data
+		};
+
+		const XHR = new XMLHttpRequest();
+
+		// Define what happens on successful data submission
+		XHR.addEventListener('load', async function(event)
+		{
+			let result = JSON.parse(event.target.responseText);
+			// if login was not sucessfull - else add session token as cookie
+			if(result.return === false)
+			{
+				alert('failed');
+				console.log(result);
+			}
+			else
+			{
+				alert('success');
+				console.log(result)
+			}
+		});
+
+		// Define what happens in case of error
+		XHR.addEventListener('error', function(event)
+		{
+			console.log(event.target.responseText);
+		});
+
+		// Set up our request
+		XHR.open('POST', "http://localhost/handler.php");
+
+		// Add the required HTTP header for form data POST requests
+		XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+		// Finally, send our data.
+		XHR.send((serializeObject(postData)));
 	}
 
-	$saveFile = file_put_contents(__DIR__.'/rteu.json', json_encode($content, JSON_PRETTY_PRINT));
+	function serializeObject(obj)
+	{
+		let str = [];
+		for(let p in obj)
+			if(obj.hasOwnProperty(p))
+			{
+				str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+			}
+		return str.join("&");
+	}
 
-	if($saveFile)
-	{
-		$notice = [
-			'message' => 'Successfully inserted data',
-			'return'  => true,
-			'notice'  => $content,
-		];
-	}
-	else
-	{
-		$notice = [
-			'message' => 'Failed to inserted data',
-			'return'  => false,
-			'notice'  => $content,
-		];
-	}
-	echo json_encode($notice, JSON_PRETTY_PRINT);
-	exit;
-}
-else
-{
-	http_response_code(404);
-}
+</script>

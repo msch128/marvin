@@ -16,18 +16,20 @@
 ?>
 
 <head>
-	<title>Bumms</title>
+	<title>Configuration editor</title>
 </head>
 <div class="col-sm-6 col-sm-offset-3">
-	<h1>Titel</h1>
+	<h1></h1>
 
 	<form id="rteu-form">
 		<?php
 
+		// get local json file
 		$json = file_get_contents(__DIR__.'/rteu.json');
 
 		try
 		{
+			// decode json to array
 			$content = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		}
 		catch(JsonException $e)
@@ -36,16 +38,19 @@
 			exit;
 		}
 
+		// loop through array to set first row
+		// i.e. RX3
 		foreach($content as $key => $value)
 		{
-			?>
-			<p><strong><?php echo strtoupper($key) ?></strong></p>
+			?><p><strong><?php echo strtoupper($key) ?></strong></p>
 			<table>
 				<tr>
 					<td width="50%"></td>
 					<td width="50%"></td>
 				</tr>
 				<?php
+				// loop through child element to get key and value
+				// i.e. name => Hello World
 				foreach($value as $k => $v)
 				{
 					?>
@@ -66,6 +71,9 @@
 	</form>
 </div>
 <script>
+	/**
+	 * ajax function for sending  data to handler.php
+	 */
 	window.addEventListener("load", function()
 	{
 		const form = document.getElementById("rteu-form");
@@ -74,6 +82,7 @@
 		{
 			event.preventDefault();
 
+			// get all Formdata for Ajax
 			const FD = new FormData(event.target);
 
 			let Formobject = {};
@@ -81,12 +90,15 @@
 			{
 				Formobject[key] = value;
 			});
-			let json = JSON.stringify(Formobject);
 
-			sendData(json);
+			sendData(JSON.stringify(Formobject));
 		});
 	});
 
+	/**
+	 * Sends data to handler.php based on Form input
+	 * @param data
+	 */
 	function sendData(data)
 	{
 		let postData = {
@@ -100,7 +112,7 @@
 		XHR.addEventListener('load', async function(event)
 		{
 			let result = JSON.parse(event.target.responseText);
-			// if login was not sucessfull - else add session token as cookie
+			// if login was not sucessfull - else successfully submitted data and rteu.json overwritten
 			if(result.return === false)
 			{
 				alert('failed');
@@ -113,22 +125,28 @@
 			}
 		});
 
-		// Define what happens in case of error
+		// if response was an  error log responsetext to console
 		XHR.addEventListener('error', function(event)
 		{
 			console.log(event.target.responseText);
 		});
 
-		// Set up our request
+		// sets ajax type and url
 		XHR.open('POST', "http://localhost/handler.php");
 
 		// Add the required HTTP header for form data POST requests
 		XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-		// Finally, send our data.
+		// send data to defined url
 		XHR.send((serializeObject(postData)));
 	}
 
+	/**
+	 * serializes objects into a string for transfering its content to php
+	 *
+	 * @param obj
+	 * @returns {string}
+	 */
 	function serializeObject(obj)
 	{
 		let str = [];

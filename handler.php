@@ -36,19 +36,19 @@ if(!empty($_REQUEST['hash']))
 	$content = [];
 	foreach($data as $key => $value)
 	{
+		// quick and dirty way  to get contents from frontend (not my idea)
 		preg_match_all('/(.*?)-(.*?)$/m', $key, $matches, PREG_SET_ORDER, 0);
 
 		$matches = $matches[0];
-		/* FYI
-		$parent = $matches[1];
-		$child  = $matches[2];  */
 
 		if(!empty($matches[1]))
 		{
+			// map $matches to fit the layout of the rteu.json file
 			$content[$matches[1]][$matches[2]] = $value;
 		}
 	}
 
+	// save file with new (changed) content
 	$saveFile = file_put_contents(__DIR__.'/rteu.json', json_encode($content, JSON_PRETTY_PRINT));
 
 	if($saveFile)
@@ -67,6 +67,7 @@ if(!empty($_REQUEST['hash']))
 			'notice'  => $content,
 		];
 	}
+
 	echo json_encode($notice, JSON_PRETTY_PRINT);
 	exit;
 }

@@ -13,6 +13,16 @@
  * or publicly readable on your website
  */
 
+function getMyUrl()
+{
+	$protocol = (!empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1')) ? 'https://' : 'http://';
+	$server   = $_SERVER['SERVER_NAME'];
+	$request = $_SERVER['REQUEST_URI'] ?? '';
+	$port     = $_SERVER['SERVER_PORT'] ? ':'.$_SERVER['SERVER_PORT'] : '';
+
+	return $protocol.$server.$port.$request;
+}
+
 ?>
 
 <head>
@@ -132,7 +142,8 @@
 		});
 
 		// sets ajax type and url
-		XHR.open('POST', "http://localhost/handler.php");
+		<?php echo '//'.$_SERVER['REQUEST_URI'].PHP_EOL; ?>
+		XHR.open('POST', "<?php echo getMyUrl(); ?>/handler.php");
 
 		// Add the required HTTP header for form data POST requests
 		XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');

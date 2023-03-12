@@ -49,7 +49,7 @@ if(!empty($_REQUEST['hash']))
 	}
 
 	// save file with new (changed) content
-	$saveFile = file_put_contents(__DIR__.'/rteu.json', json_encode($content, JSON_PRETTY_PRINT));
+	$saveFile = file_put_contents(__DIR__.'/rteu.json', json_encode($content, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
 
 	if($saveFile)
 	{
@@ -68,7 +68,7 @@ if(!empty($_REQUEST['hash']))
 		];
 	}
 
-	echo json_encode($notice, JSON_PRETTY_PRINT);
+	echo json_encode($notice, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
 	exit;
 }
 else

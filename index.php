@@ -80,7 +80,7 @@ function getMyUrl()
 				<?php } ?>
 			</table>
 		<?php } ?>
-		<button type="submit" class="btn btn-success">Absenden</button>
+		<button type="submit" class="btn btn-success">submit</button>
 	</form>
 </div>
 <script>

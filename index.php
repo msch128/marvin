@@ -37,7 +37,10 @@ function getMyUrl()
 	<form id="rteu-form">
 		<?php
 
-		// get local json file
+        // get hostname
+        $hostname = file_get_contents('/etc/hostname');
+
+        // get local json file
 		$json = file_get_contents(__DIR__.'/rteu.json');
 
 		try
@@ -53,7 +56,10 @@ function getMyUrl()
 
 		// loop through array to set first row
 		// i.e. RX3
-		foreach($content as $key => $value)
+        ?>
+        <h1><?php echo strtoupper($hostname); ?></h1>
+        <?php
+        foreach($content as $key => $value)
 		{
 			?><p><strong><?php echo strtoupper($key) ?></strong></p>
 			<table>
